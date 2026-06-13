@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MEMORA AI · Intelligent Learning Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#07090f;--bg2:#0d1119;--bg3:#141824;--surface:#1a2035;--border:#252d42;--border2:#2e3a52;--text:#e8ecf4;--text2:#8a94a8;--text3:#5a6278;--accent:#4f8aff;--accent2:#7c5fff;--green:#2de0a5;--yellow:#ffcb47;--red:#ff5470;--font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;--r:12px;--rl:20px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.app{display:flex;height:100vh}
+.sidebar{width:252px;min-width:252px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 14px;gap:2px;overflow-y:auto}
+.logo{font-family:var(--font-h);font-size:21px;font-weight:800;padding:6px 12px 22px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo span{font-size:10px;font-weight:400;display:block;color:var(--text3);-webkit-text-fill-color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ns{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:10px 12px 4px;margin-top:6px}
+.nb{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r);border:none;background:transparent;color:var(--text2);font-family:var(--font-b);font-size:14px;cursor:pointer;transition:all .15s;width:100%;text-align:left}
+.nb:hover{background:var(--bg3);color:var(--text)}.nb.active{background:rgba(79,138,255,.12);color:var(--accent)}
+.nb .ic{font-size:15px;width:18px;text-align:center}
+.sf{margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.sec{display:none;padding:30px 38px;max-width:1080px;animation:fi .22s ease}
+.sec.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(7px)}to{opacity:1}}
+.ph{margin-bottom:28px}.pt{font-family:var(--font-h);font-size:26px;font-weight:700;letter-spacing:-.5px}
+.ps{font-size:13px;color:var(--text2);margin-top:3px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px;margin-bottom:18px}
+.card:hover{border-color:var(--border2)}
+.ct{font-family:var(--font-h);font-size:15px;font-weight:600;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.uz{border:2px dashed var(--border2);border-radius:var(--rl);padding:44px;text-align:center;cursor:pointer;transition:all .2s}
+.uz:hover,.uz.drag{border-color:var(--accent);background:rgba(79,138,255,.05)}
+.pbw{background:var(--bg3);border-radius:4px;height:6px;margin-top:14px;overflow:hidden;display:none}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;width:0%;transition:width .3s}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--r);border:none;font-family:var(--font-b);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+.bp{background:var(--accent);color:#fff}.bp:hover{background:#3d78f0;transform:translateY(-1px)}
+.bs{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}.bs:hover{background:var(--surface)}
+.br{background:rgba(255,84,112,.12);color:var(--red);border:1px solid rgba(255,84,112,.25)}
+.bsm{padding:5px 12px;font-size:12px}.btn:disabled{opacity:.5;cursor:not-allowed}
+.bld::after{content:'';display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;margin-left:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+input[type=text],textarea,select{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font-b);font-size:14px;padding:9px 13px;outline:none;transition:border-color .15s;width:100%}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:76px}
+.ab{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:18px;margin-top:14px;display:none}
+.al{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.at{font-size:15px;line-height:1.7}
+.ctags{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.ctag{background:rgba(79,138,255,.1);color:var(--accent);border:1px solid rgba(79,138,255,.2);border-radius:20px;font-size:11px;padding:2px 9px}
+.fr{display:flex;gap:7px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.fl{font-size:13px;color:var(--text2)}
+.fb{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:3px 11px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s}
+.fb:hover{border-color:var(--accent);color:var(--accent)}.fb.sel{background:rgba(79,138,255,.12);border-color:var(--accent);color:var(--accent)}
+.db{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.db.easy{background:rgba(45,224,165,.15);color:var(--green)}.db.medium{background:rgba(255,203,71,.15);color:var(--yellow)}.db.hard{background:rgba(255,84,112,.15);color:var(--red)}
+.qcard{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rl);padding:22px;margin-bottom:14px;transition:all .2s}
+.qcard.correct{border-color:var(--green);background:rgba(45,224,165,.04)}.qcard.wrong{border-color:var(--red);background:rgba(255,84,112,.04)}
+.qn{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:7px}
+.qt{font-size:15px;font-weight:500;margin-bottom:14px;line-height:1.5}
+.qopts{display:grid;gap:7px}
+.qo{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;cursor:pointer;font-size:13px;transition:all .15s;display:flex;align-items:center;gap:9px}
+.qo:hover{border-color:var(--accent);background:rgba(79,138,255,.05)}.qo.sel{border-color:var(--accent);background:rgba(79,138,255,.1);color:var(--accent)}
+.qo.ca{border-color:var(--green);background:rgba(45,224,165,.1);color:var(--green)}.qo.wa{border-color:var(--red);background:rgba(255,84,112,.1);color:var(--red)}
+.qexp{margin-top:10px;padding:11px;background:rgba(79,138,255,.05);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;font-size:13px;color:var(--text2);display:none}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.sv{font-family:var(--font-h);font-size:30px;font-weight:700}.sl{font-size:13px;color:var(--text2)}
+.cw{position:relative;height:240px}
+.ti{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
+.ti:last-child{border-bottom:none}.tn{flex:1;font-size:14px}.tm{font-size:12px;color:var(--text2)}
+.md{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.md.weak{background:var(--red)}.md.moderate{background:var(--yellow)}.md.strong{background:var(--green)}
+.lc{background:linear-gradient(135deg,rgba(79,138,255,.05),rgba(124,95,255,.05));border:1px solid rgba(79,138,255,.2);border-radius:var(--rl);padding:26px;margin-bottom:18px}
+.lt{font-family:var(--font-h);font-size:19px;font-weight:700;margin-bottom:10px}
+.lo{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:18px}
+.kps{display:grid;gap:9px}.kp{display:flex;align-items:flex-start;gap:9px;font-size:14px;line-height:1.5}
+.kp::before{content:'→';color:var(--accent);flex-shrink:0;margin-top:1px}
+.la{background:rgba(255,203,71,.08);border:1px solid rgba(255,203,71,.2);border-radius:var(--r);padding:12px;font-size:13px;margin-top:14px;color:var(--yellow)}
+.lr{background:rgba(45,224,165,.08);border:1px solid rgba(45,224,165,.2);border-radius:var(--r);padding:12px;font-size:14px;font-weight:500;margin-top:10px;color:var(--green)}
+.mbw{background:var(--bg3);border-radius:8px;height:9px;overflow:hidden;margin:6px 0}
+.mb{height:100%;border-radius:8px;transition:width .5s}
+.mb.weak{background:var(--red)}.mb.moderate{background:var(--yellow)}.mb.strong{background:var(--green)}
+.tg{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.tc{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text2)}
+.tc:hover{border-color:var(--accent2);color:var(--text)}.tc.active{background:rgba(124,95,255,.15);border-color:var(--accent2);color:var(--accent2)}
+#toast{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:11px 18px;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,.4);transform:translateY(100px);opacity:0;transition:all .3s;z-index:1000;max-width:300px}
+#toast.show{transform:translateY(0);opacity:1}#toast.success{border-left:3px solid var(--green)}#toast.error{border-left:3px solid var(--red)}#toast.info{border-left:3px solid var(--accent)}
+.ld{display:inline-block;width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
+.ls{text-align:center;padding:38px;color:var(--text2)}
+.pc{border-radius:var(--rl);padding:22px;text-align:center}
+.pc.train{background:rgba(79,138,255,.08);border:1px solid rgba(79,138,255,.2)}.pc.test{background:rgba(45,224,165,.08);border:1px solid rgba(45,224,165,.2)}
+.ppct{font-family:var(--font-h);font-size:44px;font-weight:800}
+.pc.train .ppct{color:var(--accent)}.pc.test .ppct{color:var(--green)}
+.rb{background:var(--bg3);border-radius:var(--r);padding:14px;font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--text2)}
+.sep{height:1px;background:var(--border);margin:20px 0}
+.tm2{color:var(--text2);font-size:13px}
+.fbb{display:flex;align-items:center;justify-content:space-between}
+.empty{text-align:center;padding:50px;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="logo">MEMORA AI<span>Intelligent Learning</span></div>
+  <div class="ns">Learn</div>
+  <button class="nb active" onclick="show('upload',this)"><span class="ic">📄</span>Upload Materials</button>
+  <button class="nb" onclick="show('qa',this)"><span class="ic">💬</span>Ask Questions</button>
+  <div class="ns">Teaching</div>
+  <button class="nb" onclick="show('lesson',this)"><span class="ic">📖</span>Teaching Mode</button>
+  <button class="nb" onclick="show('quiz',this)"><span class="ic">🧠</span>Adaptive Quiz</button>
+  <div class="ns">Analytics</div>
+  <button class="nb" onclick="show('dashboard',this)"><span class="ic">📊</span>Dashboard</button>
+  <button class="nb" onclick="show('progress',this)"><span class="ic">📈</span>My Progress</button>
+  <button class="nb" onclick="show('traintest',this)"><span class="ic">🧪</span>Train/Test Eval</button>
+  <div class="sf">Set <code>GEMINI_API_KEY</code> before starting</div>
+</nav>
+<main class="main">
+
+<section id="sec-upload" class="sec active">
+  <div class="ph"><div class="pt">📄 Upload Materials</div><div class="ps">Upload PDF or PPTX files to power the knowledge base</div></div>
+  <div class="uz" id="uz" onclick="document.getElementById('fi').click()">
+    <div style="font-size:44px;margin-bottom:14px;">☁️</div>
+    <div style="font-family:var(--font-h);font-size:17px;font-weight:600;margin-bottom:6px;">Drop your PDF or PPTX here</div>
+    <div class="tm2">or click to browse · PDF & PPTX supported</div>
+    <div class="pbw" id="pbw"><div class="pb" id="pb"></div></div>
+  </div>
+  <input type="file" id="fi" accept=".pdf,.pptx" multiple onchange="handleFiles(event)" style="display:none"/>
+  <div id="upload-status" style="margin-top:14px;"></div>
+  <div class="card" style="margin-top:22px;"><div class="ct">📚 Uploaded Documents</div><div id="doc-list"><div class="ls"><div class="ld"></div><p style="margin-top:10px;">Loading…</p></div></div></div>
+</section>
+
+<section id="sec-qa" class="sec">
+  <div class="ph"><div class="pt">💬 Ask Questions</div><div class="ps">AI answers from your uploaded materials</div></div>
+  <div class="card">
+    <textarea id="qq" placeholder="Ask anything… (Ctrl+Enter to send)" style="min-height:60px;margin-bottom:12px;"></textarea>
+    <div class="fbb">
+      <label style="display:flex;gap:7px;align-items:center;font-size:13px;color:var(--text2);cursor:pointer;">
+        <input type="checkbox" id="inc-sum" style="width:auto;accent-color:var(--accent)"> Include summary
+      </label>
+      <button class="btn bp" id="ask-btn" onclick="askQ()">🔍 Ask</button>
+    </div>
+    <div class="ab" id="ab">
+      <div class="al">Answer</div><div class="at" id="ans-txt"></div>
+      <div id="exp-w" style="margin-top:14px;display:none;"><div class="al">Explanation</div><div class="at tm2" id="exp-txt"></div></div>
+      <div id="sum-w" style="margin-top:14px;display:none;"><div class="al">Summary</div><div class="at tm2" id="sum-txt" style="white-space:pre-line;"></div></div>
+      <div id="kc-w" style="margin-top:10px;"></div>
+      <div class="sep"></div>
+      <div class="fr">
+        <span class="fl">Helpful?</span>
+        <button class="fb" onclick="sendFb('r',true,event)">👍 Yes</button>
+        <button class="fb" onclick="sendFb('r',false,event)">👎 No</button>
+        <span class="fl" style="margin-left:10px;">Quality:</span>
+        <button class="fb" onclick="sendFb('q','good',event)">✨ Good</button>
+        <button class="fb" onclick="sendFb('q','average',event)">➡ Avg</button>
+        <button class="fb" onclick="sendFb('q','poor',event)">❌ Poor</button>
+      </div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">🕐 Recent Questions</div><div id="qa-hist"><div class="tm2">No questions yet.</div></div></div>
+</section>
+
+<section id="sec-lesson" class="sec">
+  <div class="ph"><div class="pt">📖 Teaching Mode</div><div class="ps">AI-generated micro-lessons from your content</div></div>
+  <div class="card">
+    <div class="ct">Choose a Topic</div>
+    <div class="tg" id="lesson-tg"><div class="tm2">Loading topics…</div></div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <input type="text" id="lesson-topic" placeholder="Or type a custom topic…" style="flex:1"/>
+      <button class="btn bp" onclick="startLesson()">📖 Start Lesson</button>
+    </div>
+  </div>
+  <div id="lesson-out"></div>
+</section>
+
+<section id="sec-quiz" class="sec">
+  <div class="ph"><div class="pt">🧠 Adaptive Quiz</div><div class="ps">RL-powered difficulty adapts to your performance</div></div>
+  <div id="quiz-setup">
+    <div class="card">
+      <div class="ct">Quiz Settings</div>
+      <div class="g2" style="margin-bottom:14px;">
+        <div><label class="tm2" style="display:block;margin-bottom:5px;">Topic</label><select id="quiz-topic"><option>Loading…</option></select></div>
+        <div><label class="tm2" style="display:block;margin-bottom:5px;">Questions</label>
+          <select id="quiz-nq"><option value="3">3 questions</option><option value="5" selected>5 questions</option><option value="10">10 questions</option></select></div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label class="tm2" style="display:block;margin-bottom:5px;">Difficulty</label>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <button class="fb sel" id="dauto" onclick="setDiff('',event)">🤖 Auto (RL)</button>
+          <button class="fb" onclick="setDiff('easy',event)">🟢 Easy</button>
+          <button class="fb" onclick="setDiff('medium',event)">🟡 Medium</button>
+          <button class="fb" onclick="setDiff('hard',event)">🔴 Hard</button>
+        </div>
+      </div>
+      <button class="btn bp" onclick="startQuiz()">🚀 Start Quiz</button>
+    </div>
+    <div class="card" id="due-card" style="display:none;"><div class="ct">⏰ Topics Due for Retest</div><div id="due-list"></div></div>
+  </div>
+  <div id="quiz-active" style="display:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+      <span id="qtl" style="font-family:var(--font-h);font-size:17px;font-weight:700;"></span>
+      <span class="db" id="qdb">medium</span>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+        <span class="tm2" id="qpl"></span>
+        <button class="btn bs bsm" onclick="endQuiz()">✕ End</button>
+      </div>
+    </div>
+    <div id="quiz-qs"></div>
+    <div id="quiz-sr" style="margin-top:18px;display:none;"><button class="btn bp" onclick="submitAll()">Submit All Answers →</button></div>
+  </div>
+  <div id="quiz-res" style="display:none;"></div>
+</section>
+
+<section id="sec-dashboard" class="sec">
+  <div class="ph"><div class="pt">📊 Dashboard</div><div class="ps">Learning performance overview</div></div>
+  <div class="g3" style="margin-bottom:18px;">
+    <div class="sc"><div class="sv" id="d-acc">—</div><div class="sl">Overall Accuracy</div></div>
+    <div class="sc"><div class="sv" id="d-str">—</div><div class="sl">Strong Topics</div></div>
+    <div class="sc"><div class="sv" id="d-weak">—</div><div class="sl">Weak Topics</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">📅 Daily Accuracy (30 days)</div><div class="cw"><canvas id="c-timeline"></canvas></div></div>
+    <div class="card"><div class="ct">🎯 Mastery Breakdown</div><div class="cw"><canvas id="c-mastery"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:18px;"><div class="ct">🗺 Topic-wise Performance</div><div class="cw" style="height:280px;"><canvas id="c-topics"></canvas></div></div>
+  <div class="card"><div class="ct">💡 AI Recommendations</div><div id="rec-out"><div class="tm2">Loading…</div></div></div>
+</section>
+
+<section id="sec-progress" class="sec">
+  <div class="ph"><div class="pt">📈 My Progress</div><div class="ps">Mastery levels and difficulty progression</div></div>
+  <div class="card"><div class="ct">Topic Mastery</div><div id="mastery-list"><div class="tm2">No data yet.</div></div></div>
+  <div class="card"><div class="ct">⚡ Difficulty Progression</div><div class="cw"><canvas id="c-prog"></canvas></div></div>
+</section>
+
+<section id="sec-traintest" class="sec">
+  <div class="ph"><div class="pt">🧪 Train / Test Evaluation</div><div class="ps">See if learning transfers to genuine understanding</div></div>
+  <div class="g2">
+    <div class="pc train"><div class="ppct" id="tt-tr">—</div><div class="tm2" style="margin-top:4px;">Training Accuracy</div><div style="font-size:11px;color:var(--text3);margin-top:6px;" id="tt-trn"></div></div>
+    <div class="pc test"><div class="ppct" id="tt-te">—</div><div class="tm2" style="margin-top:4px;">Test Accuracy</div><div style="font-size:11px;color:var(--text3);margin-top:6px;" id="tt-ten"></div></div>
+  </div>
+  <div class="card" style="margin-top:22px;"><div class="ct">📊 Learning Efficiency</div><div id="tt-interp" class="rb" style="margin-top:8px;"></div></div>
+  <div class="card"><div class="ct">Q&amp;A Feedback Analysis</div><div class="g3" id="qa-stats-g"></div></div>
+</section>
+
+</main>
+</div>
+<div id="toast"></div>
+<script>
+// ── FIX: API = same origin as the page (FastAPI serves both frontend AND API)
+const API = window.location.origin;
+let curSid=null, qs={questions:[],topic:'',difficulty:'',answers:{},startTimes:{},submitted:false}, selDiff='', charts={};
+
+function show(name,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  ({upload:loadDocs,lesson:loadLessonTopics,quiz:()=>{loadQuizTopics();loadDue();},
+    dashboard:loadDashboard,progress:loadProgress,traintest:loadTrainTest,qa:loadQAHist})[name]?.();
+}
+function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+type;setTimeout(()=>t.className='',3200);}
+async function req(path,method='GET',body=null){
+  const opts={method,headers:{}};
+  if(body&&!(body instanceof FormData)){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
+  else if(body) opts.body=body;
+  const res=await fetch(API+path,opts);
+  if(!res.ok){const e=await res.json().catch(()=>({detail:'Request failed'}));throw new Error(e.detail||'Request failed');}
+  return res.json();
+}
+
+const uz=document.getElementById('uz');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');[...e.dataTransfer.files].filter(f=>f.name.endsWith('.pdf')||f.name.endsWith('.pptx')).forEach(uploadFile);});
+function handleFiles(e){[...e.target.files].forEach(uploadFile);}
+async function uploadFile(file){
+  const fd=new FormData();fd.append('file',file);
+  const pbw=document.getElementById('pbw'),pb=document.getElementById('pb'),st=document.getElementById('upload-status');
+  pbw.style.display='block';pb.style.width='35%';
+  st.innerHTML=`<div class="tm2">Uploading <strong>${file.name}</strong>…</div>`;
+  try{pb.style.width='65%';const r=await req('/api/upload/','POST',fd);pb.style.width='100%';
+    st.innerHTML=`<div style="color:var(--green);font-size:14px;">✅ <strong>${r.filename}</strong> — ${r.chunks} chunks</div>`;
+    toast('Uploaded!','success');setTimeout(()=>{pbw.style.display='none';pb.style.width='0%';},1400);loadDocs();
+  }catch(e){pbw.style.display='none';pb.style.width='0%';st.innerHTML=`<div style="color:var(--red);">❌ ${e.message}</div>`;toast(e.message,'error');}
+}
+async function loadDocs(){
+  try{const docs=await req('/api/upload/documents');const el=document.getElementById('doc-list');
+    if(!docs.length){el.innerHTML='<div class="empty">📂<br>No documents yet.</div>';return;}
+    el.innerHTML=docs.map(d=>`<div class="ti"><div class="tn">📄 <strong>${d.filename}</strong></div><div class="tm">${d.total_chunks} chunks</div><div class="tm">${new Date(d.created_at).toLocaleDateString()}</div></div>`).join('');
+  }catch(e){document.getElementById('doc-list').innerHTML='<div class="tm2">Failed to load.</div>';}
+}
+async function askQ(){
+  const q=document.getElementById('qq').value.trim();if(!q)return;
+  const btn=document.getElementById('ask-btn');btn.classList.add('bld');btn.disabled=true;
+  try{const r=await req('/api/qa/ask','POST',{question:q,include_summary:document.getElementById('inc-sum').checked});
+    curSid=r.session_id;document.getElementById('ans-txt').textContent=r.answer;
+    const ew=document.getElementById('exp-w');if(r.explanation){document.getElementById('exp-txt').textContent=r.explanation;ew.style.display='block';}else ew.style.display='none';
+    const sw=document.getElementById('sum-w');if(r.summary){document.getElementById('sum-txt').textContent=r.summary;sw.style.display='block';}else sw.style.display='none';
+    document.getElementById('kc-w').innerHTML=(r.key_concepts||[]).length?'<div class="ctags">'+(r.key_concepts||[]).map(c=>`<span class="ctag">${c}</span>`).join('')+'</div>':'';
+    document.getElementById('ab').style.display='block';loadQAHist();
+  }catch(e){toast(e.message,'error');}finally{btn.classList.remove('bld');btn.disabled=false;}
+}
+async function sendFb(type,val,evt){
+  if(!curSid)return;
+  const b={session_id:curSid};if(type==='r'){b.relevant=val;b.quality='good';}else{b.relevant=true;b.quality=val;}
+  try{await req('/api/qa/feedback','POST',b);evt.target.classList.add('sel');toast('Feedback saved!','success');}catch(e){}
+}
+async function loadQAHist(){
+  try{const data=await req('/api/qa/history?limit=10');const el=document.getElementById('qa-hist');
+    if(!data.length){el.innerHTML='<div class="tm2">No questions yet.</div>';return;}
+    el.innerHTML=data.map(s=>`<div class="ti"><div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:3px;">${s.question}</div><div class="tm2">${(s.answer||'').slice(0,120)}…</div></div><div class="tm">${new Date(s.created_at).toLocaleDateString()}</div></div>`).join('');
+  }catch(e){}
+}
+async function loadLessonTopics(){
+  try{const d=await req('/api/quiz/topics');const el=document.getElementById('lesson-tg');
+    if(!d.topics.length){el.innerHTML='<div class="tm2">Upload PDFs first.</div>';return;}
+    el.innerHTML=d.topics.slice(0,24).map(t=>`<div class="tc" onclick="pickLT(this,'${t.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${t.slice(0,40)}</div>`).join('');
+  }catch(e){}
+}
+function pickLT(el,t){document.querySelectorAll('#lesson-tg .tc').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById('lesson-topic').value=t;}
+async function startLesson(){
+  const topic=document.getElementById('lesson-topic').value.trim();if(!topic){toast('Select a topic','error');return;}
+  const out=document.getElementById('lesson-out');out.innerHTML='<div class="ls"><div class="ld"></div><p style="margin-top:10px;">Generating…</p></div>';
+  try{const l=await req('/api/quiz/lesson','POST',{topic});
+    out.innerHTML=`<div class="lc"><div class="lt">📘 ${l.title||topic}</div><div class="lo">${l.overview||''}</div>
+      ${l.key_points?.length?`<div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Key Points</div><div class="kps">${l.key_points.map(p=>`<div class="kp">${p}</div>`).join('')}</div>`:''}
+      ${l.analogy?`<div class="la">💡 Analogy: ${l.analogy}</div>`:''}${l.remember?`<div class="lr">🧠 Remember: ${l.remember}</div>`:''}
+    </div><div style="text-align:center;"><button class="btn bp" onclick="document.querySelectorAll('.nb')[3].click()">🧠 Take a Quiz</button></div>`;
+  }catch(e){out.innerHTML=`<div style="color:var(--red);">❌ ${e.message}</div>`;}
+}
+async function loadQuizTopics(){try{const d=await req('/api/quiz/topics');document.getElementById('quiz-topic').innerHTML=d.topics.map(t=>`<option value="${t}">${t.slice(0,50)}</option>`).join('');}catch(e){}}
+async function loadDue(){
+  try{const d=await req('/api/quiz/due');const card=document.getElementById('due-card'),list=document.getElementById('due-list');
+    if(!d.due_topics.length){card.style.display='none';return;}
+    card.style.display='block';list.innerHTML=d.due_topics.map(t=>`<div class="ti"><div class="md weak"></div><div class="tn">${t}</div><button class="btn br bsm" onclick="quickQ('${t.replace(/'/g,"\\'")}')">Retest</button></div>`).join('');
+  }catch(e){}
+}
+function setDiff(d,evt){selDiff=d;document.querySelectorAll('[onclick^="setDiff"]').forEach(b=>b.classList.remove('sel'));evt.target.classList.add('sel');}
+function quickQ(topic){document.getElementById('quiz-topic').value=topic;startQuiz();}
+async function startQuiz(){
+  const topic=document.getElementById('quiz-topic').value,nq=parseInt(document.getElementById('quiz-nq').value);
+  if(!topic){toast('Select a topic','error');return;}
+  document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-active').style.display='block';document.getElementById('quiz-res').style.display='none';
+  document.getElementById('quiz-qs').innerHTML='<div class="ls"><div class="ld"></div><p style="margin-top:10px;">Generating questions…</p></div>';
+  try{const b={topic,n_questions:nq};if(selDiff) b.force_difficulty=selDiff;
+    const d=await req('/api/quiz/start','POST',b);
+    qs={questions:d.questions,topic,difficulty:d.difficulty,answers:{},startTimes:{},submitted:false};
+    document.getElementById('qtl').textContent=topic;const qdb=document.getElementById('qdb');qdb.textContent=d.difficulty;qdb.className='db '+d.difficulty;
+    document.getElementById('qpl').textContent=`${d.questions.length} Questions`;
+    renderQs(d.questions);document.getElementById('quiz-sr').style.display='block';
+  }catch(e){document.getElementById('quiz-qs').innerHTML=`<div style="color:var(--red);">❌ ${e.message}</div>`;}
+}
+function renderQs(questions){
+  const el=document.getElementById('quiz-qs');
+  el.innerHTML=questions.map((q,i)=>{
+    qs.startTimes[i]=Date.now();
+    const opts=q.options?.length?q.options:(q.type==='truefalse'?['True','False']:[]);
+    const tl=q.type==='mcq'?'📋 MCQ':q.type==='truefalse'?'✅ True/False':'📝 Short';
+    return `<div class="qcard" id="qc-${i}"><div class="qn">${tl} · Q${i+1}</div><div class="qt">${q.question}</div>
+      ${opts.length?`<div class="qopts">${opts.map((o,j)=>`<div class="qo" id="qo-${i}-${j}" onclick="selOpt(${i},${j},'${o.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><span style="font-family:var(--font-m);font-size:11px;color:var(--text3);width:16px;">${['A','B','C','D'][j]||j+1}</span>${o}</div>`).join('')}</div>`
+      :`<input type="text" placeholder="Your answer…" id="sh-${i}" style="margin-top:7px;" oninput="qs.answers[${i}]=this.value"/>`}
+      <div class="qexp" id="qe-${i}">${q.explanation||''}</div></div>`;
+  }).join('');
+}
+function selOpt(qi,oi,val){
+  const cnt=(qs.questions[qi].options||[]).length||2;
+  for(let j=0;j<cnt;j++) document.getElementById(`qo-${qi}-${j}`)?.classList.remove('sel');
+  document.getElementById(`qo-${qi}-${oi}`)?.classList.add('sel');qs.answers[qi]=val;
+}
+async function submitAll(){
+  if(qs.submitted)return;qs.submitted=true;document.getElementById('quiz-sr').style.display='none';
+  let correct=0;
+  for(let i=0;i<qs.questions.length;i++){
+    const q=qs.questions[i],ua=qs.answers[i]||'',tt=(Date.now()-(qs.startTimes[i]||Date.now()))/1000;
+    try{const r=await req('/api/quiz/submit','POST',{topic:qs.topic,question:q.question,correct_answer:q.answer,user_answer:ua,difficulty:qs.difficulty,time_taken:tt});
+      if(r.is_correct) correct++;
+      document.getElementById(`qc-${i}`)?.classList.add(r.is_correct?'correct':'wrong');
+      const opts=q.options?.length?q.options:(q.type==='truefalse'?['True','False']:[]);
+      opts.forEach((o,j)=>{const el=document.getElementById(`qo-${i}-${j}`);if(!el)return;
+        const isCA=o.toLowerCase()===q.answer.toLowerCase();
+        if(isCA) el.classList.add('ca');
+        if(el.classList.contains('sel')&&!r.is_correct) el.classList.add('wa');
+      });
+      const exp=document.getElementById(`qe-${i}`);if(exp) exp.style.display='block';
+    }catch(e){}
+  }
+  const pct=Math.round(correct/qs.questions.length*100);
+  const rel=document.getElementById('quiz-res');rel.style.display='block';
+  rel.innerHTML=`<div style="text-align:center;padding:28px;border-radius:var(--rl);margin-bottom:22px;background:${pct>=70?'rgba(45,224,165,.08)':'rgba(255,84,112,.08)'};border:1px solid ${pct>=70?'rgba(45,224,165,.3)':'rgba(255,84,112,.3)'};">
+    <div style="font-family:var(--font-h);font-size:58px;font-weight:800;color:${pct>=70?'var(--green)':'var(--red)'};">${pct}%</div>
+    <div class="tm2" style="margin-top:4px;">${correct} / ${qs.questions.length} correct · ${qs.difficulty}</div>
+    <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;">
+      <button class="btn bp" onclick="endQuiz()">🔄 New Quiz</button>
+      <button class="btn bs" onclick="show('dashboard',document.querySelectorAll('.nb')[4])">📊 Dashboard</button>
+    </div></div>`;
+  rel.scrollIntoView({behavior:'smooth'});
+}
+function endQuiz(){document.getElementById('quiz-active').style.display='none';document.getElementById('quiz-res').style.display='none';document.getElementById('quiz-setup').style.display='block';qs={questions:[],topic:'',difficulty:'',answers:{},startTimes:{},submitted:false};}
+async function loadDashboard(){
+  try{const[sum,tl,recs]=await Promise.all([req('/api/dashboard/summary'),req('/api/dashboard/timeline'),req('/api/quiz/recommendations')]);
+    document.getElementById('d-acc').textContent=sum.overall_accuracy+'%';
+    document.getElementById('d-str').textContent=sum.mastery_breakdown?.strong||0;
+    document.getElementById('d-weak').textContent=sum.mastery_breakdown?.weak||0;
+    mkLine('c-timeline',tl.timeline.map(d=>d.date.slice(5)),tl.timeline.map(d=>d.accuracy),'Accuracy %','#4f8aff');
+    const mb=sum.mastery_breakdown||{};mkDonut('c-mastery',['Strong','Moderate','Weak'],[mb.strong||0,mb.moderate||0,mb.weak||0],['#2de0a5','#ffcb47','#ff5470']);
+    const tops=(sum.topics||[]).slice(0,12);mkBar('c-topics',tops.map(t=>t.topic.slice(0,20)),tops.map(t=>t.accuracy),'Accuracy %');
+    document.getElementById('rec-out').innerHTML=`<div class="rb">${recs.recommendations||'Take quizzes to get recommendations!'}</div>`;
+  }catch(e){toast('Dashboard error: '+e.message,'error');}
+}
+async function loadProgress(){
+  try{const[bd,prog]=await Promise.all([req('/api/dashboard/topic_breakdown'),req('/api/dashboard/difficulty_progression')]);
+    const el=document.getElementById('mastery-list'),tops=bd.topics||[];
+    if(!tops.length){el.innerHTML='<div class="tm2">No quiz data yet.</div>';}
+    else el.innerHTML=tops.map(t=>`<div class="ti"><div class="md ${t.mastery_level}"></div><div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:3px;">${t.topic}</div><div class="mbw"><div class="mb ${t.mastery_level}" style="width:${t.accuracy}%"></div></div></div><div class="tm" style="text-align:right;"><div>${t.accuracy}%</div><div>${t.attempts} attempts</div></div></div>`).join('');
+    const p=prog.progression||[];if(p.length) mkLine('c-prog',p.map((_,i)=>i+1),p.map(x=>x.difficulty_num),'Difficulty','#7c5fff',{min:0,max:4,ticks:{callback:v=>['','Easy','Med','Hard',''][v]||''}});
+  }catch(e){}
+}
+async function loadTrainTest(){
+  try{const[tt,qa]=await Promise.all([req('/api/dashboard/train_test_split'),req('/api/dashboard/qa_stats')]);
+    document.getElementById('tt-tr').textContent=tt.train_accuracy+'%';document.getElementById('tt-te').textContent=tt.test_accuracy+'%';
+    document.getElementById('tt-trn').textContent=`${tt.train_count} attempts (training)`;document.getElementById('tt-ten').textContent=`${tt.test_count} attempts (evaluation)`;
+    const eff=tt.learning_efficiency;
+    document.getElementById('tt-interp').textContent=[`📊 Train: ${tt.train_accuracy}% (${tt.train_count} attempts)`,`📈 Test:  ${tt.test_accuracy}% (${tt.test_count} attempts)`,`⚡ Efficiency: ${eff>0?'+':''}${eff}%`,'',
+      eff>10?'🟢 Excellent generalisation — test beats training.':eff>0?'🟡 Good progress. Real understanding confirmed.':eff>-10?'🟠 Some overfitting. Try more varied topics.':'🔴 Review weak topics and re-read source PDFs.',
+      '',`Total attempts: ${tt.total} | Train=first 70% | Test=last 30%`].join('\n');
+    document.getElementById('qa-stats-g').innerHTML=`<div class="sc"><div class="sv">${qa.total_questions}</div><div class="sl">Questions Asked</div></div><div class="sc"><div class="sv">${qa.relevance_rate}%</div><div class="sl">Answer Relevance</div></div><div class="sc"><div class="sv">${qa.quality_distribution?.good||0}</div><div class="sl">Good Ratings</div></div>`;
+  }catch(e){}
+}
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+const CGD={grid:'rgba(37,45,66,.8)'};
+function mkLine(id,labels,data,label,color,yOpts={}){dc(id);const ctx=document.getElementById(id)?.getContext('2d');if(!ctx)return;charts[id]=new Chart(ctx,{type:'line',data:{labels,datasets:[{label,data,borderColor:color,backgroundColor:color+'22',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:color}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a94a8',maxTicksLimit:8},grid:{color:CGD.grid}},y:{ticks:{color:'#8a94a8',...(yOpts.ticks||{})},grid:{color:CGD.grid},...yOpts}}}});}
+function mkBar(id,labels,data,label){dc(id);const ctx=document.getElementById(id)?.getContext('2d');if(!ctx)return;const cols=data.map(v=>v>=80?'#2de0a5':v>=50?'#ffcb47':'#ff5470');charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label,data,backgroundColor:cols,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a94a8'},grid:{color:CGD.grid}},y:{ticks:{color:'#8a94a8'},grid:{color:CGD.grid},max:100}}}});}
+function mkDonut(id,labels,data,colors){dc(id);const ctx=document.getElementById(id)?.getContext('2d');if(!ctx)return;charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#8a94a8',padding:14,font:{size:12}}}}}});}
+document.addEventListener('DOMContentLoaded',()=>{loadDocs();document.getElementById('qq').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)askQ();});});
+</script>
+</body>
+</html>

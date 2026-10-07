@@ -4,7 +4,7 @@ python-multipart==0.0.9
 
 sqlalchemy==2.0.30
 
-faiss-cpu==1.8.0
+faiss-cpu==1.13.2
 sentence-transformers==2.7.0
 
 pymupdf==1.24.5
